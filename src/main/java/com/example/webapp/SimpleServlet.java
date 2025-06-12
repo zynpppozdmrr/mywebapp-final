@@ -16,10 +16,10 @@ public class SimpleServlet extends HttpServlet {
             throws ServletException, IOException {
 
         // Azure App Service environment variables
-        String dbHost = System.getenv("POSTGRES_HOST");
-        String dbUser = System.getenv("POSTGRES_USER");
+        String dbHost = System.getenv("POSTGRESHOST");
+        String dbUser = System.getenv("POSTGRESUSER");
         
-        String dbName = System.getenv("POSTGRES_DATABASE");
+        String dbName = System.getenv("POSTGRESDATABASE");
 
         resp.setContentType("text/plain");
         PrintWriter out = resp.getWriter();
