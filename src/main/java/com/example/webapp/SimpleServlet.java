@@ -33,10 +33,10 @@ public class SimpleServlet extends HttpServlet {
         PrintWriter out = resp.getWriter();
 
         // Environment variable'lardan bağlantı bilgilerini al
-        String user = System.getenv("PGUSER");
-        String pass = System.getenv("PGPASS");
-        String host = System.getenv("PGHOST");
-        String db   = System.getenv("PGDB");
+        String user = System.getenv("POSTGRES_USER");
+        String pass = System.getenv("POSTGRES_PASSWORD");
+        String host = System.getenv("POSTGRES_HOST");
+        String db   = System.getenv("POSTGRES_DATABASE");
 
         String url = "jdbc:postgresql://" + host + ":5432/" + db;
 
