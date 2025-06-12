@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.example</groupId>
+  <artifactId>mywebapp</artifactId>
+  <packaging>war</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>mywebapp Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+   <dependency>
+ <groupId>jakarta.servlet</groupId>
+ <artifactId>jakarta.servlet-api</artifactId>
+ <version>5.0.0</version>
+ <scope>provided</scope>
+</dependency>
+<dependency>
+ <groupId>jakarta.servlet.jsp</groupId>
+ <artifactId>jakarta.servlet.jsp-api</artifactId>
+ <version>3.0.0</version>
+ <scope>provided</scope>
+</dependency>
+<dependency>
+ <groupId>jakarta.el</groupId>
+ <artifactId>jakarta.el-api</artifactId>
+ <version>4.0.0</version>
+ <scope>provided</scope>
+</dependency>
+<dependency>
+ <groupId>jakarta.websocket</groupId>
+ <artifactId>jakarta.websocket-api</artifactId>
+ <version>2.0.0</version>
+ <scope>provided</scope>
+</dependency>
+<dependency>
+ <groupId>jakarta.security.enterprise</groupId>
+ <artifactId>jakarta.security.enterprise-api</artifactId>
+ <version>2.0.0</version>
+ <scope>provided</scope>
+</dependency>
+
+  </dependencies>
+  <build>
+    <finalName>ROOT</finalName>
+      <plugins>
+          <plugin>
+              <groupId>com.microsoft.azure</groupId>
+              <artifactId>azure-webapp-maven-plugin</artifactId>
+              <version>2.12.0</version>
+              <configuration>
+                  <schemaVersion>v2</schemaVersion>
+                  <resourceGroup>mywebapp-1743609692152-rg</resourceGroup>
+                  <appName>mywebapp-1743609692152</appName>
+                  <pricingTier>F1</pricingTier>
+                  <region>centralus</region>
+                  <runtime>
+                      <os>Linux</os>
+                      <javaVersion>Java 17</javaVersion>
+                      <webContainer>Tomcat 10.0</webContainer>
+                  </runtime>
+                  <deployment>
+                      <resources>
+                          <resource>
+                              <directory>${project.basedir}/target</directory>
+                              <includes>
+                                  <include>*.war</include>
+                              </includes>
+                          </resource>
+                      </resources>
+                  </deployment>
+              </configuration>
+          </plugin>
+      </plugins>
+  </build>
+</project>
