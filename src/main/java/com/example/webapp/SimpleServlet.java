@@ -7,8 +7,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,47 +26,17 @@ public class SimpleServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        log.log(Level.INFO, "GET request received.");
+        log.log(Level.INFO, "GET Request received.");
+
+        String dbHost = System.getenv("POSTGRES_HOST");
+        String dbUser = System.getenv("POSTGRES_USER");
+        String dbPass = System.getenv("POSTGRES_PASSWORD");
+        String dbName = System.getenv("POSTGRES_DATABASE");
+
+        resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType("text/plain");
-        PrintWriter out = resp.getWriter();
-
-        // Environment variable'lardan bağlantı bilgilerini al
-        String user = System.getenv("POSTGRES_USER");
-        String pass = System.getenv("POSTGRES_PASSWORD");
-        String host = System.getenv("POSTGRES_HOST");
-        String db   = System.getenv("POSTGRES_DATABASE");
-
-        String url = "jdbc:postgresql://" + host + ":5432/" + db;
-
-        try {
-            // PostgreSQL JDBC sürücüsünü yükle
-            Class.forName("org.postgresql.Driver");
-
-            // Bağlantı kur
-            Connection conn = DriverManager.getConnection(url, user, pass);
-            log.log(Level.INFO, "PostgreSQL connection established.");
-
-            // Sorgu çalıştır
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM todo");
-
-            // Sonuçları yaz
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String desc = rs.getString("description");
-                String details = rs.getString("details");
-                boolean done = rs.getBoolean("done");
-
-                out.println("[" + id + "] " + desc + " - " + details + " (done: " + done + ")");
-            }
-
-            rs.close();
-            stmt.close();
-            conn.close();
-
-        } catch (Exception e) {
-            log.log(Level.SEVERE, "Database connection failed: " + e.getMessage(), e);
-            out.println("Error connecting to PostgreSQL: " + e.getMessage());
-        }
+        resp.getWriter().println("Database Host: " + dbHost);
+        resp.getWriter().println("Database User: " + dbUser);
+        resp.getWriter().println("Database Name: " + dbName);
     }
 }
