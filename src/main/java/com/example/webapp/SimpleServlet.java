@@ -1,9 +1,11 @@
 package com.example.webapp;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,30 +19,39 @@ public class SimpleServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        // Azure App Service'den gelen environment değişkenleri
-        String host = System.getenv("POSTGRES_HOST");
-        String database = System.getenv("POSTGRES_DATABASE");
-        String user = System.getenv("POSTGRES_USER");
-        String password = System.getenv("POSTGRES_PASSWORD");
-
-        String jdbcUrl = "jdbc:postgresql://" + host + ":5432/" + database;
-
         resp.setContentType("text/plain");
         PrintWriter out = resp.getWriter();
 
+        // 🔐 Secret bilgileri doğrudan yazıldı (Sadece test ortamı için)
+        String host = "final1-pg.postgres.database.azure.com";
+        String db = "finaldb";
+        String user = "flaskAdmin@final1-pg";
+        String password = "EsenZeynep.35";
+
+        String url = "jdbc:postgresql://" + host + ":5432/" + db;
+
         try {
-            // PostgreSQL JDBC driver'ını yükle
             Class.forName("org.postgresql.Driver");
 
-            // Bağlantıyı kur
-            Connection conn = DriverManager.getConnection(jdbcUrl, user, password);
-            out.println("✅ Connection to PostgreSQL successful!");
-            conn.close();
+            Connection conn = DriverManager.getConnection(url, user, password);
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM todo");
 
-        } catch (ClassNotFoundException e) {
-            out.println("❌ JDBC Driver not found: " + e.getMessage());
-        } catch (SQLException e) {
-            out.println("❌ Database connection error: " + e.getMessage());
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String desc = rs.getString("description");
+                String details = rs.getString("details");
+                boolean done = rs.getBoolean("done");
+
+                out.println("[" + id + "] " + desc + " - " + details + " (done: " + done + ")");
+            }
+
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            out.println("Error connecting to PostgreSQL: " + e.getMessage());
+            e.printStackTrace(out);
         }
     }
 }
